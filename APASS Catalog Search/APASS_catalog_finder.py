@@ -1,0 +1,138 @@
+"""
+Search the APASS catalog by searching a region of the sky for comparison stars and outputs those comparisons to a file.
+
+Author: Kyle Koeller
+Date: February 8, 2021
+Python Version 3.9
+"""
+
+from astroquery.vizier import Vizier
+import pandas as pd
+import astropy.units as u
+import astropy.coordinates as coord
+
+
+def main():
+    """
+    This looks at a region of the sky at the decimal coordinates of an object and gathers the "column" data with "column
+    filters"
+    You can change the columns or the column filters to whatever you like, I have these set as they because of the
+    telescope that was used (Rooftop)
+
+    I also set the width of the search radius to larger than what you would actually see in the field of view of any
+    telescope we use to make sure it gathers all stars within the star field
+
+    Main things to change are:
+    "columns"- what factors are actually taken from the online catalog
+    "column_filters"- which stars are to actually be extracted from that online data table and narrows list down from a
+    couple hundred to like 50-60
+    "ra"/"dec"- must be in decimal notation
+    "width"- set to the notation that is currently set as, but you may change the number being used
+    """
+    # catalog is II/336/apass9
+    ra_input = float(input("Enter the decimal degree for the RA of your system: "))
+    dec_input = float(input("Enter the decimal degree for the DEC of your system: "))
+    result = Vizier(columns=['_RAJ2000', '_DEJ2000', 'Vmag', "e_Vmag", 'Bmag', "e_Bmag", "i'mag","e_i'mag"], row_limit=-1,
+                    column_filters=({"Vmag": "<14", "Bmag": "<14"})).query_region(
+        coord.SkyCoord(ra=ra_input, dec=dec_input, unit=(u.h, u.deg), frame="icrs"), width="40m", catalog="APASS")
+
+    tb = result['II/336/apass9']
+
+    # converts the table result to a list format for putting values into lists
+    table_list = []
+    for i in tb:
+        table_list.append(i)
+
+    ra = []
+    dec = []
+    vmag = []
+    e_vmag = []
+    bmag = []
+    e_bmag = []
+    imag = []
+    e_imag = []
+
+    one = 0
+    # pastes all variables into a list for future use
+    for i in range(0, len(table_list)-1):
+        two = 0
+        ra.append(table_list[one][two])
+        dec.append(table_list[one][two+1])
+        vmag.append(table_list[one][two+2])
+        e_vmag.append(table_list[one][two+3])
+        bmag.append(table_list[one][two+4])
+        e_bmag.append(table_list[one][two+5])
+        imag.append(table_list[one][two+6])
+        e_imag.append(table_list[one][two+7])
+
+        one += 1
+
+    # converts degree RA to Hour RA
+    ra_new = []
+    for i in ra:
+        ra_new.append(i/15)
+
+    # converts all list values to numbers and RA/Dec coordinates and magnitudes to numbers with limited decimal places
+    ra_final = conversion(ra_new)
+    dec_new = conversion(dec)
+    bmag_new = decimal_limit(bmag)
+    e_bmag_new = decimal_limit(e_bmag)
+    vmag_new = decimal_limit(vmag)
+    e_vmag_new = decimal_limit(e_vmag)
+    imag_new = decimal_limit(imag)
+    e_imag_new = decimal_limit(e_imag)
+
+    # places all lists into a DataFrame to paste into a text file for comparison star finder
+    df = pd.DataFrame({
+        "RA": ra_final,
+        "Dec": dec_new,
+        "Bmag": bmag_new,
+        "e_Bmag": e_bmag_new,
+        "Vmag": vmag_new,
+        "e_Vmag": e_vmag_new,
+        "i'mag": imag_new,
+        "e_i'mag": e_imag_new
+    })
+
+    # saves the dataframe to a text file and prints that dataframe out to easily see what was copied to the text file
+    text_file = input("Enter a text file name for the output comparisons (ex: APASS_3350218.txt): ")
+    df.to_csv(text_file, index=None)
+    print(df)
+    print("Completed save")
+
+
+def conversion(a):
+    """
+    Converts decimal RA and DEC to standard output with colons
+
+    :param a: decimal RA or DEC
+    :return: truncated version using colons
+    """
+    print(a)
+    b = []
+
+    for i in a:
+        num1 = float(i)
+        num2 = (num1 - int(num1)) * 60
+        num3 = format((num2 - int(num2)) * 60, ".3f")
+        b.append(str(int(num1)) + ":" + str(int(num2)) + ":" + str(num3))
+    return b
+
+
+def decimal_limit(a):
+    """
+    Limits the amount of decimals that get written out for further code clarity and ease of code use
+
+    :param a: magnitude
+    :return: reduced decimal magnitude
+    """
+    b = []
+    for i in a:
+        num = float(i)
+        num2 = format(num, ".2f")
+        b.append(num2)
+    return b
+
+
+if __name__ == '__main__':
+    main()
