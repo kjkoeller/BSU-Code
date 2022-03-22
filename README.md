@@ -11,3 +11,6 @@ First run APASS_catalog_finder to search through the APASS catalog around the fi
 
 # TESS Database Search
 Allows a user to search through the TESS database and save light curve files as CSV's to the local machine. Also allows the user to do period analysis on each data set that TESS has.
+
+# O-C Fit
+This program is meant to fit any number of polynomials to really any data set but for research, O-C data. There are also two output image examples that this program can produce. At the moment, there are no user friendly ways to make this universal without going in and manually changing the code input and output files.
