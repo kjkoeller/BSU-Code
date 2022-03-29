@@ -121,6 +121,9 @@ def data_fit():
             res = mod.fit()
             f.write(res.summary().as_latex())
     
+    # noinspection PyUnboundLocalVariable
+    # print(res.summary())
+    
     f.write(endtex)
     # writes to the file the end latex code and then saves the file
     f.close()
@@ -129,9 +132,9 @@ def data_fit():
     plt.errorbar(x, y, yerr=y_err, fmt="o", color="black")
     # make the legend always be in the upper right hand corner of the graph
     plt.legend(loc="upper right")
-    plt.xlabel("Epoch Number")
-    plt.ylabel("O-C (days)")
-    plt.title("NSVS 254037 O-C")
+    plt.xlabel(input("X-Label: "))
+    plt.ylabel(input("Y-Label: "))
+    plt.title(input("Title: "))
     plt.grid()
     plt.show()
 
