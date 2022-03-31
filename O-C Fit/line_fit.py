@@ -1,6 +1,7 @@
 """
 Author: Kyle Koeller
 Date Created: 03/04/2022
+Last Updated: 3/30/2022
 
 This program fits a set of data with numerous polynomial fits of varying degrees
 """
@@ -11,6 +12,7 @@ import numpy as np
 from numpy.polynomial import Polynomial
 import statsmodels.formula.api as smf
 import os
+import seaborn as sns
 
 
 def data_fit():
@@ -41,17 +43,9 @@ def data_fit():
     x = df[1]
     y = df[2]
     y_err = df[3]
-    N = len(x)
-
-    x_new = []
-    for i in x:
-        print(type(i), i)
-        if type(i) == int:
-            x_new.append(i)
-
-    x_new = pd.DataFrame(x_new)
-    print(x_new)
-    xs = np.linspace(x_new.min(), x_new.max(), 1000)
+    
+    # noinspection PyArgumentList
+    xs = np.linspace(x.min(), x.max(), 1000)
 
     # numpy curve fit
     degree_test = None
@@ -100,7 +94,7 @@ def data_fit():
         
         'Polynomial' then finds an array of y values given a set of x data
         """
-        model = np.poly1d(np.polyfit(x_new, y, i))
+        model = Polynomial(np.polynomial.polynomial.polyfit(x, y, i))
         # if you want to look at the more manual way of finding the R^2 value un-comment the following line otherwise
         # stick with the current regression table print("Polynomial of degree " + str(i) + " " + str(adjR(x, y, i)))
         # print("")
@@ -121,9 +115,6 @@ def data_fit():
             res = mod.fit()
             f.write(res.summary().as_latex())
     
-    # noinspection PyUnboundLocalVariable
-    # print(res.summary())
-    
     f.write(endtex)
     # writes to the file the end latex code and then saves the file
     f.close()
@@ -132,10 +123,76 @@ def data_fit():
     plt.errorbar(x, y, yerr=y_err, fmt="o", color="black")
     # make the legend always be in the upper right hand corner of the graph
     plt.legend(loc="upper right")
-    plt.xlabel(input("X-Label: "))
-    plt.ylabel(input("Y-Label: "))
-    plt.title(input("Title: "))
+    
+    empty = None
+    while not empty:
+        x_label = input("X-Label: ")
+        y_label = input("Y-Label: ")
+        title = input("Title: ")
+        if not x_label:
+            print("x label is empty. Please enter a string or value for these variables.")
+            print()
+        elif not y_label:
+            print("y label is empty. Please enter a string or value for these variables.")
+            print()
+        else:
+            empty = True
+
+    # noinspection PyUnboundLocalVariable
+    plt.xlabel(x_label)
+    # noinspection PyUnboundLocalVariable
+    plt.ylabel(y_label)
+    # noinspection PyUnboundLocalVariable
+    plt.title(title)
     plt.grid()
+    plt.show()
+    
+    # noinspection PyUnboundLocalVariable
+    residuals(x, y, x_label, y_label, degree, model, xs)
+    
+
+def residuals(x, y, x_label, y_label, degree, model, xs):
+    """
+    This plots the residuals of the data from the input file
+    :param x: original x data
+    :param y: original y data
+    :param x_label: x-axis label
+    :param y_label: y-axis label
+    :param degree: degree of the polynomial fit
+    :param model: the last model (equation) that was used from above
+    :param xs: numpy x data set
+    :return: none
+    """
+
+    # appends the y values from the model to a variable
+    y_model = model(xs)
+
+    # makes dataframes for both the raw data and the model data
+    raw_dat = pd.DataFrame({
+        x_label: x,
+        y_label: y,
+    })
+
+    model_dat = pd.DataFrame({
+        x_label: xs,
+        y_label: y_model
+    })
+
+    # allows for easy change of the format of the subplots
+    rows = 2
+    cols = 1
+    # creates the figure subplot for appending next
+    f, axs = plt.subplots(rows, cols, figsize=(9, 5))
+
+    # creates the model line fit
+    sns.lineplot(x=x_label, y=y_label, data=model_dat, ax=axs[0], color="red")
+    # plots the original data to the same subplot as the model fit
+    # edge color is removed to any sort of weird visual overlay on the plots as the normal edge color is white
+    sns.scatterplot(x=x_label, y=y_label, data=raw_dat, ax=axs[0], color="black", edgecolor="none")
+    # plots the residuals from the original data to the polynomial degree from  above
+    sns.residplot(x=x_label, y=y_label, order=degree, data=raw_dat, ax=axs[1], color="black",
+                  scatter_kws=dict(edgecolor="none"))
+
     plt.show()
 
 
