@@ -13,4 +13,4 @@ First run APASS_catalog_finder to search through the APASS catalog around the fi
 Allows a user to search through the TESS database and save light curve files as CSV's to the local machine. Also allows the user to do period analysis on each data set that TESS has.
 
 # O-C Fit
-This program is meant to fit any number of polynomials to really any data set but for research, O-C data. There is an output file, user entered, that allows for multiple linear regression tables to be viewed in either a text file or a latex file for paper usage. These regression tables uses a model of Ordinary Least Squares (OLD) and the method of Least Squares.
+This program is meant to fit any number of polynomials to really any data set but for research, O-C data. There is an output file, user entered, that allows for multiple linear regression tables to be viewed in either a text file or a latex file for paper usage. These regression tables uses a model of Ordinary Least Squares (OLD) and the method of Least Squares. This program also allows for a residual plot to be made in the same figure as the model fit and original data points.
