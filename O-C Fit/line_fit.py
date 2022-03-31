@@ -44,6 +44,21 @@ def data_fit():
     y = df[2]
     y_err = df[3]
     
+    x1 = []
+    y1 = []
+    y_err_new = []
+    count = 0
+    # collects only primary times of minima and its corresponding O-C and O-C error
+    for i in x:
+        if i.is_integer():
+            x1.append(i)
+            y1.append(y[count])
+            y_err_new.append(y_err[count])
+        count += 1
+
+    x1 = np.array(x1)
+    y1 = np.array(y1)
+    
     # noinspection PyArgumentList
     xs = np.linspace(x.min(), x.max(), 1000)
 
@@ -94,7 +109,7 @@ def data_fit():
         
         'Polynomial' then finds an array of y values given a set of x data
         """
-        model = Polynomial(np.polynomial.polynomial.polyfit(x, y, i))
+        model = Polynomial(np.polynomial.polynomial.polyfit(x1, y1, i))
         # if you want to look at the more manual way of finding the R^2 value un-comment the following line otherwise
         # stick with the current regression table print("Polynomial of degree " + str(i) + " " + str(adjR(x, y, i)))
         # print("")
@@ -120,7 +135,7 @@ def data_fit():
     f.close()
     print("Finished saving latex/text file.")
     
-    plt.errorbar(x, y, yerr=y_err, fmt="o", color="black")
+    plt.errorbar(x1, y1, yerr=y_err, fmt="o", color="black")
     # make the legend always be in the upper right hand corner of the graph
     plt.legend(loc="upper right")
     
@@ -148,7 +163,7 @@ def data_fit():
     plt.show()
     
     # noinspection PyUnboundLocalVariable
-    residuals(x, y, x_label, y_label, degree, model, xs)
+    residuals(x1, y1, x_label, y_label, degree, model, xs)
     
 
 def residuals(x, y, x_label, y_label, degree, model, xs):
@@ -183,6 +198,11 @@ def residuals(x, y, x_label, y_label, degree, model, xs):
     cols = 1
     # creates the figure subplot for appending next
     f, axs = plt.subplots(rows, cols, figsize=(9, 5))
+    # adds gridlines to both subplots
+    axs[0].grid(visible=True, which='major', color='black', linewidth=1.0)
+    axs[0].grid(visible=True, which='minor', color='black', linewidth=0.5)
+    axs[1].grid(visible=True, which='major', color='black', linewidth=1.0)
+    axs[1].grid(visible=True, which='minor', color='black', linewidth=0.5)
 
     # creates the model line fit
     sns.lineplot(x=x_label, y=y_label, data=model_dat, ax=axs[0], color="red")
@@ -192,6 +212,8 @@ def residuals(x, y, x_label, y_label, degree, model, xs):
     # plots the residuals from the original data to the polynomial degree from  above
     sns.residplot(x=x_label, y=y_label, order=degree, data=raw_dat, ax=axs[1], color="black",
                   scatter_kws=dict(edgecolor="none"))
+    # adds a horizontal line to the residual plot to represent the model line fit with the same color
+    axs[1].axhline(y=0, color="red")
 
     plt.show()
 
