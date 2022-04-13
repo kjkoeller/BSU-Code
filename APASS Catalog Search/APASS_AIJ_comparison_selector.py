@@ -37,11 +37,11 @@ def main():
     apass_ra = list(df[0])
     simbad_dec = list(dh[1])
     simbad_ra = list(dh[0])
-    '''  
+    
     # converts the RA and Dec coordinate format to decimal format
     apass_split_ra = splitter(apass_ra)
     apass_split_dec = splitter(apass_dec)
-    '''
+    
     simbad_split_ra = splitter(simbad_ra)
     simbad_split_dec = splitter(simbad_dec)
 
@@ -51,8 +51,8 @@ def main():
     # the RA and Dec noted for magnitude finding
     for i in simbad_split_dec:
         apass_count = 0
-        for k in apass_dec:
-            radial = pyasl.getAngDist(float(apass_ra[apass_count]), float(k), float(simbad_split_ra[simbad_count]),
+        for k in apass_split_dec:
+            radial = pyasl.getAngDist(float(apass_split_ra[apass_count]), float(k), float(simbad_split_ra[simbad_count]),
                                       float(i))
             if radial <= 0.025:
                 print(radial)
@@ -68,7 +68,7 @@ def main():
     except KeyError:
         print("There were no comparison stars found between the two text files.")
         exit()
-
+    """
     # converts RA and DEC from decimal to degree coordinates and limits the decimal places for the mag
     # and mag errors to 2 decimal points
     dec_final = conversion(list(duplicate_df[1]))
@@ -86,10 +86,10 @@ def main():
         "VMag": vmag_final,
         "e_VMag": e_vmag_final
     })
-
+    """
     # prints the output and saves the dataframe to the text file with "tab" spacing
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Catalog.txt): ")
-    final.to_csv(output_file, index=None, sep="\t")
+    duplicate_df.to_csv(output_file, index=None, sep="\t")
     print("Finished Saving")
 
 
