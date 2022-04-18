@@ -1,7 +1,10 @@
 """
 Author: Kyle Koeller
 Created: 4/13/2022
-Last Updated: 4/13/2022
+Last Updated: 4/18/2022
+Based on this paper: https://arxiv.org/pdf/astro-ph/0609736.pdf
+
+This program calculates a Cousins R (R_c) filter band value from a given Johnson V and B, and g' and r'.
 """
 
 import pandas as pd
@@ -42,25 +45,30 @@ def main():
     count = 0
     # loop that goes through each value in B to get the total amount of values to be calculated
     for i in B:
+        # separates the equation out into more easily readable sections
         div = (alpha*(float(i) - float(V[count])) - gamma - float(g[count]) + float(r[count]))/beta
         val = float(V[count]) + div
 
         b_v = ((float(i) - float(V[count]))*e_alpha)**2
         v_rc = ((float(V[count]) - val)*e_beta)**2
         beta_alpha = ((beta - alpha)*float(e_V[count]))**2
-
+        
+        # full equation given in the cited paper at the top of the program file
         root = np.sqrt(b_v + v_rc + float(e_g[count])**2 + float(e_r[count])**2 + (alpha*float(e_B[count]))**2 + beta_alpha)
-        # if the value is nan then append 99.999 to the R_c value and its error to make it obvious that there is no given value
+        
         if isNaN(val) == True:
+            # if the value is nan then append 99.999 to the R_c value and its error to make it obvious that there is no given value
             Rc.append(99.999)
             e_Rc.append(99.999)
         else:
+            # if there is a value then format that value with only 2 decimal places otherwise there will be like 8
             Rc.append(format(val, ".2f"))
             e_Rc.append(format((1/beta)*root, ".2f"))
         count += 1
 
     # puts all columns into a dataframe for output
     final = pd.DataFrame({
+        # need to keep RA and DEC in order to compare with catalog comparison or with the radec file
         "RA": ra,
         "DEC": dec,
         "BMag": B,
@@ -73,6 +81,7 @@ def main():
 
     # saves the dataframe to an entered output file
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Rc_values.txt): ")
+    # noinspection PyTypeChecker
     final.to_csv(output_file, index=None, sep="\t")
     print("Finished Saving")
 
