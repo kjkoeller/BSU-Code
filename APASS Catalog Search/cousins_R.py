@@ -26,19 +26,39 @@ def main():
 
     # import file from Catalog Finder or Catalog Comparison
     input_file = input("Enter the text file name from Catalog Finder or Catalog Comparison: ")
+    try:
+        # checks whether the file/path is real or not
+        with open(input_file) as f:
+            print("File loaded.")
+            print()
+    except IOError:
+        # prints off the reason for closing the program
+        print("File not accessible. Please restart program and enter a valid file name/path.")
+        exit()
+    
     df = pd.read_csv(input_file, header=None, skiprows=[0], sep=",")
 
     # writes the columns from the input file
-    ra = df[0]
-    dec = df[1]
-    B = df[2]
-    e_B = df[3]
-    V = df[4]
-    e_V = df[5]
-    g = df[6]
-    e_g = df[7]
-    r = df[8]
-    e_r = df[9]
+    try:
+        # this try except function checks whether there are just enough columns in the file being loaded and tells 
+        # the user what they need to do in order to get the correct columns
+        ra = df[0]
+        dec = df[1]
+        B = df[2]
+        e_B = df[3]
+        V = df[4]
+        e_V = df[5]
+        g = df[6]
+        e_g = df[7]
+        r = df[8]
+        e_r = df[9]
+    except KeyError:
+        # prints off instructions and then closes the program
+        print("The file you have loaded does not have the enough columns.")
+        print("Must include RA, DEC, B, V, g', r', and their respective errors.")
+        print("Please run the catalog finder first to get these values from the APASS database before running this "
+              "program.")
+        exit()
 
     Rc = []
     e_Rc = []
