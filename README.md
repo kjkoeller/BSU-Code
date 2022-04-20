@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/371992b8c7544d67a2ce87bb92f4a580)](https://www.codacy.com/gh/kjkoeller/BSU-Code/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kjkoeller/BSU-Code&amp;utm_campaign=Badge_Grade)
+
 # BSU-Code
 Projects currently working on at Ball State University for the Physics and Astronomy Department for my Masters Thesis
 
