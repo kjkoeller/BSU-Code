@@ -105,6 +105,7 @@ def data_fit():
         """
         Inside the model variable:
         'np.polynomial.polynomial.polyfit(x, y, i)' gathers the coefficients of the line fit
+		
         'Polynomial' then finds an array of y values given a set of x data
         """
         model = Polynomial(np.polynomial.polynomial.polyfit(x1, y1, i))
@@ -195,7 +196,7 @@ def residuals(x, y, x_label, y_label, degree, model, xs):
     rows = 2
     cols = 1
     # creates the figure subplot for appending next
-    f, axs = plt.subplots(rows, cols, figsize=(9, 5))
+    axs = plt.subplots(rows, cols, figsize=(9, 5))
     # adds gridlines to both subplots
     axs[0].grid(visible=True, which='major', color='black', linewidth=1.0)
     axs[0].grid(visible=True, which='minor', color='black', linewidth=0.5)
@@ -222,9 +223,9 @@ def adjR(x, y, degree):
 
     :param x: x data points
     :param y: y data points
-    :param degree: polynomial degree
-    
-    :return: R squared value
+    :param degree: polynomial degree\
+	
+	:return: R squared value
     """
 
     results = {}
