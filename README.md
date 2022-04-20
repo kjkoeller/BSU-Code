@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/059d5d767266436587f6062e81cc0910)](https://app.codacy.com/gh/kjkoeller/BSU-Code?utm_source=github.com&utm_medium=referral&utm_content=kjkoeller/BSU-Code&utm_campaign=Badge_Grade_Settings)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/371992b8c7544d67a2ce87bb92f4a580)](https://www.codacy.com/gh/kjkoeller/BSU-Code/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=kjkoeller/BSU-Code&amp;utm_campaign=Badge_Grade)
 
 # BSU-Code
