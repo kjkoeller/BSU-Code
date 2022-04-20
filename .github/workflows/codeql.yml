@@ -79,3 +79,10 @@ jobs:
         pylint-options: "--rcfile=setup.cfg"
         isort-options: "-w 100"
         django: false
+    - name: Setup Python
+      uses: actions/setup-python@v3.1.2
+      with:
+    # Version range or exact version of a Python version to use, using SemVer's version range syntax.
+        python-version: "3.x"
+    # The target architecture (x86, x64) of the Python interpreter.
+        architecture: x64
