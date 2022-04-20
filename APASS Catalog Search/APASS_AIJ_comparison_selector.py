@@ -14,7 +14,7 @@ def main():
     # reads the text files to be analyzed for comparison star matches between APASS and Simbad
     apass_file = input("Enter the text file name for the generated APASS stars: ")
     print()
-    print("For the RADEC file you must delete all the comments and column headers before loading the file. 
+    print("For the RADEC file you must delete all the comments and column headers before loading the file."
           "The program will crash otherwise.")
     radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
     while True:
