@@ -219,13 +219,13 @@ def residuals(x, y, x_label, y_label, degree, model, xs):
 
 
 def adjR(x, y, degree):
-   """
+    """
     Finds the R Squared value for a given polynomial degree manually
 
     :param x: x data points
     :param y: y data points
     :param degree: polynomial degree
-
+    
     :return: R squared value
     """
     
