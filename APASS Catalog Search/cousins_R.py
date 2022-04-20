@@ -1,7 +1,7 @@
 """
 Author: Kyle Koeller
 Created: 4/13/2022
-Last Updated: 4/18/2022
+Last Updated: 4/20/2022
 Based on this paper: https://arxiv.org/pdf/astro-ph/0609736.pdf
 
 This program calculates a Cousins R (R_c) filter band value from a given Johnson V and B, and g' and r'.
@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 
 
+# noinspection PyUnboundLocalVariable
 def main():
     """
     Calculates the Cousins R_c value for a given B, V, g', and r' from APASS
@@ -35,7 +36,7 @@ def main():
         # prints off the reason for closing the program
         print("File not accessible. Please restart program and enter a valid file name/path.")
         exit()
-    
+
     df = pd.read_csv(input_file, header=None, skiprows=[0], sep=",")
 
     # writes the columns from the input file
@@ -63,10 +64,10 @@ def main():
     Rc = []
     e_Rc = []
     count = 0
-    
+
     test = 10.551 + (((0.278*0.682)-0.219-10.919+10.395)/1.321)
     total_Rc(test)
-    
+
     # loop that goes through each value in B to get the total amount of values to be calculated
     for i in B:
         # separates the equation out into more easily readable sections
@@ -76,10 +77,10 @@ def main():
         b_v = ((float(i) - float(V[count]))*e_alpha)**2
         v_rc = ((float(V[count]) - val)*e_beta)**2
         beta_alpha = ((beta - alpha)*float(e_V[count]))**2
-        
+
         # full equation given in the cited paper at the top of the program file
         root = np.sqrt(b_v + v_rc + float(e_g[count])**2 + float(e_r[count])**2 + (alpha*float(e_B[count]))**2 + beta_alpha)
-        
+
         if isNaN(val) is True:
             # if the value is nan then append 99.999 to the R_c value and its error to make it obvious that there is no given value
             Rc.append(99.999)
