@@ -98,7 +98,7 @@ def data_fit():
             print()
     
     # noinspection PyUnboundLocalVariable
-    f = open(file_name, 'w')
+    f = open(output_file, 'w')
     f.write(beginningtex)
     
     # noinspection PyUnboundLocalVariable
