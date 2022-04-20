@@ -65,9 +65,6 @@ def main():
     e_Rc = []
     count = 0
 
-    test = 10.551 + (((0.278*0.682)-0.219-10.919+10.395)/1.321)
-    total_Rc(test)
-
     # loop that goes through each value in B to get the total amount of values to be calculated
     for i in B:
         # separates the equation out into more easily readable sections
@@ -120,10 +117,6 @@ def isNaN(num):
     """
 
     return num != num
-
-
-def total_Rc(Rc):
-    assert Rc == 10.132071915215745
 
 
 if __name__ == '__main__':
