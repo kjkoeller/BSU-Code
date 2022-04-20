@@ -35,7 +35,7 @@ def main():
         lc = li[i].download()
         """
         Exports the light curve file to a CSV
-        Leave on True or you will receive an error warning that the file already exists if you run this more than 
+        Leave on True or you will receive an error warning that the file already exists if you run this more than
         once.
         """
         lc.to_csv(r"C:\Users\Kyle\OneDrive\PhysicsAstro\Astronomy\Code\Tess_Search\%s_tess%d_data.csv" % (system_name, i),
@@ -59,12 +59,12 @@ def period_analysis(lc):
     :return: nothing
     """
     pg = lc.normalize(unit='ppm').to_periodogram()
-    period = pg.period_at_max_power
+    # period = pg.period_at_max_power
     '''
     You will need to update the minmum_period and maximum_period to what your specific system has. The example below
-    are the periods of NSVS 896797 with what the TESS data was producing for me. You do not need to get this specific, 
+    are the periods of NSVS 896797 with what the TESS data was producing for me. You do not need to get this specific,
     most likely 4 decimal places will suffice.
-        
+    
     This next section is the much more accurate period search, as this allows you to systematically search in a range
     that you set. Rather than just a blanket maximum frequency.
     '''
