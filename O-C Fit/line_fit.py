@@ -106,7 +106,7 @@ def data_fit():
         Inside the model variable:
         'np.polynomial.polynomial.polyfit(x, y, i)' gathers the coefficients of the line fit
 		
-        'Polynomial' then finds an array of y values given a set of x data
+		'Polynomial' then finds an array of y values given a set of x data
         """
         model = Polynomial(np.polynomial.polynomial.polyfit(x1, y1, i))
         # if you want to look at the more manual way of finding the R^2 value un-comment the following line otherwise
@@ -223,10 +223,10 @@ def adjR(x, y, degree):
 
     :param x: x data points
     :param y: y data points
-    :param degree: polynomial degree\
+    :param degree: polynomial degree
 	
 	:return: R squared value
-    """
+	"""
 
     results = {}
     coeffs = np.polyfit(x, y, degree)
