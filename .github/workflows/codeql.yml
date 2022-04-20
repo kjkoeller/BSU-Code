@@ -73,7 +73,6 @@ jobs:
   # uses: sunnysid3up/python-linter@93076bd8f740f062069291d738fc70c1b4171c1d
       uses: sunnysid3up/python-linter@v0.1-beta.7
       with:
-        source: "src"
         strict: "medium"
         mypy-options: "--ignore-missing-imports --show-error-codes"
         pylint-options: "--rcfile=setup.cfg"
