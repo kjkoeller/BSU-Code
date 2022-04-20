@@ -15,7 +15,8 @@ def main():
     # reads the text files to be analyzed for comparison star matches between APASS and Simbad
     apass_file = input("Enter the text file name for the generated APASS stars: ")
     print()
-    print("You must delete all rows in the RA and DEC file from AIJ that do not have numbers (i.e. Delete the first 10 lines or so)")
+    print("You must delete all rows in the RA and DEC file from AIJ that do not have numbers 
+          "(i.e. Delete the first 10 lines or so)")
     radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
     df = pd.read_csv(apass_file, header=None, skiprows=[0], sep=",")
     dh = pd.read_csv(radec_file, header=None)
