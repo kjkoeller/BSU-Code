@@ -1,7 +1,7 @@
 """
 Author: Kyle Koeller
 Date Created: 03/04/2022
-Last Updated: 3/30/2022
+Last Updated: 4/20/2022
 
 This program fits a set of data with numerous polynomial fits of varying degrees
 """
@@ -22,7 +22,6 @@ def data_fit():
 
     :return: Fits and residuals for a given data set
     """
-
     # read in the text file
     isFile = None
     while not isFile:
@@ -38,12 +37,12 @@ def data_fit():
 
     # noinspection PyUnboundLocalVariable
     df = pd.read_csv("total_minimums.txt", header=None, delim_whitespace=True)
-    
+
     # append values to their respective lists for further and future potential use
     x = df[1]
     y = df[2]
     y_err = df[3]
-    
+
     x1 = []
     y1 = []
     y_err_new = []
@@ -58,7 +57,7 @@ def data_fit():
 
     x1 = np.array(x1)
     y1 = np.array(y1)
-    
+
     # noinspection PyArgumentList
     xs = np.linspace(x.min(), x.max(), 1000)
 
@@ -73,7 +72,7 @@ def data_fit():
             print("This is not an integer, please enter an integer.")
             print()
             degree_test = False
-    
+
     print("")
     line_style = [(0, (1, 10)), (0, (1, 1)), (0, (5, 10)), (0, (5, 5)), (0, (5, 1)),
                   (0, (3, 10, 1, 10)), (0, (3, 5, 1, 5)), (0, (3, 1, 1, 1)), (0, (3, 5, 1, 5, 1, 5)),
@@ -83,10 +82,10 @@ def data_fit():
 
     # beginning latex to a latex table
     beginningtex = """\\documentclass{report}
-        \\usepackage{booktabs}
-        \\begin{document}"""
+            \\usepackage{booktabs}
+            \\begin{document}"""
     endtex = "\end{document}"
-    
+
     # opens a file with this name to begin writing to the file
     output_test = None
     while not output_test:
@@ -96,28 +95,28 @@ def data_fit():
         else:
             print("This is not an allowed file output. Please make sure the file has the extension .txt or .tex.")
             print()
-    
+
     # noinspection PyUnboundLocalVariable
     f = open(output_file, 'w')
     f.write(beginningtex)
-    
+
     # noinspection PyUnboundLocalVariable
-    for i in range(1, degree+1):
+    for i in range(1, degree + 1):
         """
         Inside the model variable:
         'np.polynomial.polynomial.polyfit(x, y, i)' gathers the coefficients of the line fit
-        
         'Polynomial' then finds an array of y values given a set of x data
         """
         model = Polynomial(np.polynomial.polynomial.polyfit(x1, y1, i))
         # if you want to look at the more manual way of finding the R^2 value un-comment the following line otherwise
         # stick with the current regression table print("Polynomial of degree " + str(i) + " " + str(adjR(x, y, i)))
         # print("")
-        
+
         # plot the main graph with both fits (linear and poly) onto the same graph
-        plt.plot(xs, model(xs), color="black", label="polynomial fit of degree " + str(i), linestyle=line_style[line_count])
+        plt.plot(xs, model(xs), color="black", label="polynomial fit of degree " + str(i),
+                 linestyle=line_style[line_count])
         line_count += 1
-        
+
         # this if statement adds a string together to be used in the regression analysis
         # pretty much however many degrees in the polynomial there are, there will be that many I values
         if i >= 2:
@@ -129,16 +128,16 @@ def data_fit():
             mod = smf.ols(formula='y ~ x', data=df)
             res = mod.fit()
             f.write(res.summary().as_latex())
-    
+
     f.write(endtex)
     # writes to the file the end latex code and then saves the file
     f.close()
     print("Finished saving latex/text file.")
-    
+
     plt.errorbar(x1, y1, yerr=y_err, fmt="o", color="black")
     # make the legend always be in the upper right hand corner of the graph
     plt.legend(loc="upper right")
-    
+
     empty = None
     while not empty:
         x_label = input("X-Label: ")
@@ -161,10 +160,10 @@ def data_fit():
     plt.title(title)
     plt.grid()
     plt.show()
-    
+
     # noinspection PyUnboundLocalVariable
     residuals(x1, y1, x_label, y_label, degree, model, xs)
-    
+
 
 def residuals(x, y, x_label, y_label, degree, model, xs):
     """
@@ -178,7 +177,6 @@ def residuals(x, y, x_label, y_label, degree, model, xs):
     :param xs: numpy x data set
     :return: none
     """
-
     # appends the y values from the model to a variable
     y_model = model(xs)
 
@@ -228,15 +226,15 @@ def adjR(x, y, degree):
     
     :return: R squared value
     """
-    
+
     results = {}
     coeffs = np.polyfit(x, y, degree)
     p = np.poly1d(coeffs)
     yhat = p(x)
-    ybar = np.sum(y)/len(y)
-    ssreg = np.sum((yhat-ybar)**2)
-    sstot = np.sum((y - ybar)**2)
-    results["r_squared"] = 1 - (((1-(ssreg/sstot))*(len(y)-1))/(len(y)-degree-1))
+    ybar = np.sum(y) / len(y)
+    ssreg = np.sum((yhat - ybar) ** 2)
+    sstot = np.sum((y - ybar) ** 2)
+    results["r_squared"] = 1 - (((1 - (ssreg / sstot)) * (len(y) - 1)) / (len(y) - degree - 1))
 
     return results
 
