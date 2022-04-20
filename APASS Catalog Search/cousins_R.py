@@ -40,7 +40,7 @@ def main():
 
     # writes the columns from the input file
     try:
-        # this try except function checks whether there are just enough columns in the file being loaded and tells 
+        # this try except function checks whether there are just enough columns in the file being loaded and tells
         # the user what they need to do in order to get the correct columns
         ra = df[0]
         dec = df[1]
@@ -76,7 +76,7 @@ def main():
         # full equation given in the cited paper at the top of the program file
         root = np.sqrt(b_v + v_rc + float(e_g[count])**2 + float(e_r[count])**2 + (alpha*float(e_B[count]))**2 + beta_alpha)
         
-        if isNaN(val) == True:
+        if isNaN(val) is True:
             # if the value is nan then append 99.999 to the R_c value and its error to make it obvious that there is no given value
             Rc.append(99.999)
             e_Rc.append(99.999)
