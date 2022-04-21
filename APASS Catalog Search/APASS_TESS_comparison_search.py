@@ -29,59 +29,5 @@ def main():
     print("Finished Saving")
 
 
-def splitter(a):
-    """
-    Splits the truncated colon RA and DEC from simbad into decimal forms
-
-    :param a:
-    :return:
-    """
-    # makes the coordinate string into a decimal number from the text file
-    step = []
-    final = []
-    for i in a:
-        new = i.split(":")
-        num1 = int(new[0])
-        num2 = int(new[1])
-        num3 = int(float(new[2]))
-        b = num1 + ((num2 + (num3/60))/60)
-        step.append(format(b, ".7f"))
-
-    for i in step:
-        final.append(float(format(i)))
-
-    return final
-
-
-def new_list(a):
-    """
-    Converts lists into number format with minimal decimal places
-
-    :param a: list
-    :return: new list with floats
-    """
-    b = []
-    for i in a:
-        b.append(float(format(i, ".2f")))
-    return b
-
-
-def conversion(a):
-    """
-    Converts decimal RA and DEC to standard output with colons
-
-    :param a: decimal RA or DEC
-    :return: truncated version using colons
-    """
-    b = []
-    print(a)
-    for i in a:
-        num1 = float(i)
-        num2 = (num1 - int(num1)) * 60
-        num3 = format((num2 - int(num2)) * 60, ".3f")
-        b.append(str(int(num1)) + ":" + str(int(num2)) + ":" + str(num3))
-    return b
-
-
 if __name__ == '__main__':
     main()
