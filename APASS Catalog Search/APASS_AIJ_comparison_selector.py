@@ -30,8 +30,9 @@ def main():
         else:
             apass_file = input("Enter the text file name for the generated APASS stars: ")
             radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
-
-    duplicate_df = angle_dist(apass_file, radec_file)
+    
+    # noinspection PyUnboundLocalVariable
+    duplicate_df = angle_dist(df, dh)
 
     # prints the output and saves the dataframe to the text file with "tab" spacing
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Catalog.txt): ")
@@ -89,10 +90,14 @@ def conversion(a):
     return b
 
 
-def angle_dist(apass_file, radec_file):
-    df = pd.read_csv(apass_file, header=None, skiprows=[0], sep="\t")
-    dh = pd.read_csv(radec_file, header=None)
-
+def angle_dist(df, dh):
+    """
+    Gathers a list of stars that are very close to the ones given in the RADEC file
+    
+    :param df: apass dataframe
+    :param dh: radec dataframe
+    :return: compared list
+    """
     # checks specific columns and adds those values to a list variable for comparison in the nested for loops below
     apass_dec = list(df[1])
     apass_ra = list(df[0])
