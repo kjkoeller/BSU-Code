@@ -1,84 +1,27 @@
 """
-APASS Star comparison finding for the most accurate magnitudes from the list of stars made in AIJ
+Author: Kyle Koeller
+Created: 2/8/2022
+Last Updated: 4/21/2022
+Python Version 3.X
 
-Name: Kyle Koeller
-Date: February 8, 2021
-Python Version 3.9
+APASS Star comparison finding for the most accurate magnitudes from the list of stars made in AIJ
 """
 
 from __future__ import print_function, division
 import pandas as pd
-from PyAstronomy import pyasl
+import APASS_AIJ_comparison_selector as aij
 
 
 def main():
     # reads the text files to be analyzed for comparison star matches between APASS and Simbad
     apass_file = input("Enter the text file name for the generated APASS stars: ")
     print()
-    print("You must delete all rows in the RA and DEC file from AIJ that do not have numbers"
-          "(i.e. Delete the first 10 lines or so)")
+    print("You must delete all rows in the RA and DEC file from AIJ that do not have numbers (i.e. Delete the first 10 lines or so)")
     radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
     df = pd.read_csv(apass_file, header=None, skiprows=[0], sep=",")
     dh = pd.read_csv(radec_file, header=None)
 
-    # checks specific columns and adds those values to a list variable for comparison in the nested for loops below
-    apass_dec = list(df[1])
-    apass_ra = list(df[0])
-    simbad_dec = list(dh[1])
-    simbad_ra = list(dh[0])
-
-    # converts the RA and Dec coordinate format to decimal format
-    apass_split_ra = splitter(apass_ra)
-    apass_split_dec = splitter(apass_dec)
-
-    simbad_split_ra = splitter(simbad_ra)
-    simbad_split_dec = splitter(simbad_dec)
-
-    comp = pd.DataFrame()
-    simbad_count = 0
-    # finds the comparison star in both APASS text file and RA and Dec files to an output variable with
-    # the RA and Dec noted for magnitude finding
-    for i in simbad_split_dec:
-        apass_count = 0
-        for k in apass_split_dec:
-            radial = pyasl.getAngDist(float(apass_split_ra[apass_count]), float(k),
-                                      float(simbad_split_ra[simbad_count]), float(i))
-
-            if radial <= 0.005:
-                comp = comp.append(df.loc[apass_count:apass_count], ignore_index=True)
-            apass_count += 1
-        simbad_count += 1
-
-    # removes all duplicate rows from the dataframe
-    duplicate_df = comp.drop_duplicates()
-
-    try:
-        ra_final = list(duplicate_df[0])
-    except KeyError:
-        print("There were no comparison stars found between the two text files.")
-        exit()
-
-    # converts RA and DEC from decimal to degree coordinates and limits the decimal places for the mag
-    # and mag errors to 2 decimal points
-    dec_final = list(duplicate_df[1])
-    bmag_final = new_list(list(duplicate_df[2]))
-    e_bmag_final = new_list(list(duplicate_df[3]))
-    vmag_final = new_list(list(duplicate_df[4]))
-    e_vmag_final = new_list(list(duplicate_df[5]))
-    imag_final = new_list(list(duplicate_df[6]))
-    e_imag_final = new_list(list(duplicate_df[7]))
-
-    # makes the final dataframe that will be saved to a csv file text file for later use and analysis
-    final = pd.DataFrame({
-        "RA": ra_final,
-        "DEC": dec_final,
-        "BMag": bmag_final,
-        "e_BMag": e_bmag_final,
-        "VMag": vmag_final,
-        "e_VMag": e_vmag_final,
-        "iMag": imag_final,
-        "e_iMag": e_imag_final
-    })
+    final = aij.angle_dist(apass_file, radec_file)
 
     # prints the output and saves the dataframe to the text file with "tab" spacing
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Catalog.txt): ")
