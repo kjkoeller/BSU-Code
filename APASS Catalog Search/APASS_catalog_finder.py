@@ -42,8 +42,8 @@ def main():
     table_list = []
     for i in tb:
         table_list.append(i)
-
-   ra = []
+	
+	ra = []
     dec = []
     vmag = []
     e_vmag = []
