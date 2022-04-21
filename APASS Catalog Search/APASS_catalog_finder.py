@@ -32,7 +32,7 @@ def main():
     # catalog is II/336/apass9
     ra_input = float(input("Enter the decimal degree for the RA of your system: "))
     dec_input = float(input("Enter the decimal degree for the DEC of your system: "))
-    result = Vizier(columns=['_RAJ2000', '_DEJ2000', 'Vmag', "e_Vmag", 'Bmag', "e_Bmag", "i'mag", "e_i'mag"], row_limit=-1,
+    result = Vizier(columns=['_RAJ2000', '_DEJ2000', 'Vmag', "e_Vmag", 'Bmag', "e_Bmag", "g'mag", "e_g'mag", "r'mag", "e_r'mag"], row_limit=-1,
                     column_filters=({"Vmag": "<14", "Bmag": "<14"})).query_region(
         coord.SkyCoord(ra=ra_input, dec=dec_input, unit=(u.h, u.deg), frame="icrs"), width="40m", catalog="APASS")
 
@@ -44,8 +44,8 @@ def main():
         table_list.append(i)
 	
 	ra = []
-    dec = []
-    vmag = []
+	dec = []
+	vmag = []
     e_vmag = []
     bmag = []
     e_bmag = []
