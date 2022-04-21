@@ -10,6 +10,7 @@ APASS Star comparison finding for the most accurate magnitudes from the list of 
 from __future__ import print_function, division
 import pandas as pd
 from PyAstronomy import pyasl
+import APASS_catalog_finder as APASS_catalog
 
 
 def main():
@@ -105,11 +106,11 @@ def angle_dist(df, dh):
     simbad_ra = list(dh[0])
 
     # converts the RA and Dec coordinate format to decimal format
-    apass_split_ra = splitter(apass_ra)
-    apass_split_dec = splitter(apass_dec)
+    apass_split_ra = APASS_catalog.splitter(apass_ra)
+    apass_split_dec = APASS_catalog.splitter(apass_dec)
 
-    simbad_split_ra = splitter(simbad_ra)
-    simbad_split_dec = splitter(simbad_dec)
+    simbad_split_ra = APASS_catalog.splitter(simbad_ra)
+    simbad_split_dec = APASS_catalog.splitter(simbad_dec)
 
     comp = pd.DataFrame()
     simbad_count = 0
