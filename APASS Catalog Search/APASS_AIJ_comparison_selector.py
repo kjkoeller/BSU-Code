@@ -31,7 +31,7 @@ def main():
         else:
             apass_file = input("Enter the text file name for the generated APASS stars: ")
             radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
-    
+
     # noinspection PyUnboundLocalVariable
     duplicate_df = angle_dist(df, dh)
 
@@ -39,29 +39,6 @@ def main():
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Catalog.txt): ")
     duplicate_df.to_csv(output_file, index=None, sep="\t")
     print("Finished Saving")
-
-
-def splitter(a):
-    """
-    Splits the truncated colon RA and DEC from simbad into decimal forms
-    :param a:
-    :return:
-    """
-    # makes the coordinate string into a decimal number from the text file
-    step = []
-    final = []
-    for i in a:
-        new = i.split(":")
-        num1 = int(new[0])
-        num2 = int(new[1])
-        num3 = int(float(new[2]))
-        b = num1 + ((num2 + (num3 / 60)) / 60)
-        step.append(format(b, ".7f"))
-
-    for i in step:
-        final.append(float(format(i)))
-
-    return final
 
 
 def new_list(a):
@@ -76,25 +53,10 @@ def new_list(a):
     return b
 
 
-def conversion(a):
-    """
-    Converts decimal RA and DEC to standard output with colons
-    :param a: decimal RA or DEC
-    :return: truncated version using colons
-    """
-    b = []
-    for i in a:
-        num1 = float(i)
-        num2 = (num1 - int(num1)) * 60
-        num3 = format((num2 - int(num2)) * 60, ".3f")
-        b.append(str(int(num1)) + ":" + str(int(num2)) + ":" + str(num3))
-    return b
-
-
 def angle_dist(df, dh):
     """
     Gathers a list of stars that are very close to the ones given in the RADEC file
-    
+
     :param df: apass dataframe
     :param dh: radec dataframe
     :return: compared list
