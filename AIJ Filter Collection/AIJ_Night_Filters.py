@@ -14,7 +14,6 @@ close on them.
 """
 
 import pandas as pd
-import math as mt
 from os import path
 
 
@@ -61,7 +60,6 @@ def get_filters(n):
     total_hjd = []
     total_amag = []
     total_error = []
-    total_flux = []
     # checks for either the b, v, r filter as either upper or lowercase will work
     for i in range(n):
         while True:
