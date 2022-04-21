@@ -21,7 +21,7 @@ def main():
     df = pd.read_csv(apass_file, header=None, skiprows=[0], sep=",")
     dh = pd.read_csv(radec_file, header=None)
 
-    final = aij.angle_dist(apass_file, radec_file)
+    final = aij.angle_dist(df, dh)
 
     # prints the output and saves the dataframe to the text file with "tab" spacing
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Catalog.txt): ")
