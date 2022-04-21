@@ -43,14 +43,16 @@ def main():
     for i in tb:
         table_list.append(i)
 
-    ra = []
+   ra = []
     dec = []
     vmag = []
     e_vmag = []
     bmag = []
     e_bmag = []
-    imag = []
-    e_imag = []
+    gmag = []
+    e_gmag = []
+    rmag = []
+    e_rmag = []
 
     one = 0
     # pastes all variables into a list for future use
@@ -62,8 +64,10 @@ def main():
         e_vmag.append(table_list[one][two+3])
         bmag.append(table_list[one][two+4])
         e_bmag.append(table_list[one][two+5])
-        imag.append(table_list[one][two+6])
-        e_imag.append(table_list[one][two+7])
+        gmag.append(table_list[one][two+6])
+        e_gmag.append(table_list[one][two+7])
+        rmag.append(table_list[one][two+8])
+        e_rmag.append(table_list[one][two+9])
 
         one += 1
 
@@ -79,8 +83,10 @@ def main():
     e_bmag_new = decimal_limit(e_bmag)
     vmag_new = decimal_limit(vmag)
     e_vmag_new = decimal_limit(e_vmag)
-    imag_new = decimal_limit(imag)
-    e_imag_new = decimal_limit(e_imag)
+    gmag_new = decimal_limit(gmag)
+    e_gmag_new = decimal_limit(e_gmag)
+    rmag_new = decimal_limit(rmag)
+    e_rmag_new = decimal_limit(e_rmag)
 
     # places all lists into a DataFrame to paste into a text file for comparison star finder
     df = pd.DataFrame({
@@ -90,11 +96,14 @@ def main():
         "e_Bmag": e_bmag_new,
         "Vmag": vmag_new,
         "e_Vmag": e_vmag_new,
-        "i'mag": imag_new,
-        "e_i'mag": e_imag_new
+        "g'mag": gmag_new,
+        "e_g'mag": e_gmag_new,
+        "r'mag": rmag_new,
+        "e_r'mag": e_rmag_new
     })
 
     # saves the dataframe to a text file and prints that dataframe out to easily see what was copied to the text file
+    print()
     text_file = input("Enter a text file name for the output comparisons (ex: APASS_3350218.txt): ")
     df.to_csv(text_file, index=None)
     print("Completed save")
@@ -116,6 +125,29 @@ def conversion(a):
         num3 = format((num2 - int(num2)) * 60, ".3f")
         b.append(str(int(num1)) + ":" + str(int(num2)) + ":" + str(num3))
     return b
+
+
+def splitter(a):
+    """
+    Splits the truncated colon RA and DEC from simbad into decimal forms
+    :param a:
+    :return:
+    """
+    # makes the coordinate string into a decimal number from the text file
+    step = []
+    final = []
+    for i in a:
+        new = i.split(":")
+        num1 = int(new[0])
+        num2 = int(new[1])
+        num3 = int(float(new[2]))
+        b = num1 + ((num2 + (num3 / 60)) / 60)
+        step.append(format(b, ".7f"))
+
+    for i in step:
+        final.append(float(format(i)))
+
+    return final
 
 
 def decimal_limit(a):
