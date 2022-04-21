@@ -32,8 +32,10 @@ def main():
     # catalog is II/336/apass9
     ra_input = float(input("Enter the decimal degree for the RA of your system: "))
     dec_input = float(input("Enter the decimal degree for the DEC of your system: "))
-    result = Vizier(columns=['_RAJ2000', '_DEJ2000', 'Vmag', "e_Vmag", 'Bmag', "e_Bmag", "g'mag", "e_g'mag", "r'mag", "e_r'mag"], row_limit=-1,
-                    column_filters=({"Vmag": "<14", "Bmag": "<14"})).query_region(
+    result = Vizier(
+        columns=['_RAJ2000', '_DEJ2000', 'Vmag', "e_Vmag", 'Bmag', "e_Bmag", "g'mag", "e_g'mag", "r'mag", "e_r'mag"],
+        row_limit=-1,
+        column_filters=({"Vmag": "<14", "Bmag": "<14"})).query_region(
         coord.SkyCoord(ra=ra_input, dec=dec_input, unit=(u.h, u.deg), frame="icrs"), width="40m", catalog="APASS")
 
     tb = result['II/336/apass9']
@@ -42,10 +44,10 @@ def main():
     table_list = []
     for i in tb:
         table_list.append(i)
-	
-	ra = []
-	dec = []
-	vmag = []
+
+    ra = []
+    dec = []
+    vmag = []
     e_vmag = []
     bmag = []
     e_bmag = []
@@ -56,25 +58,25 @@ def main():
 
     one = 0
     # pastes all variables into a list for future use
-    for i in range(0, len(table_list)-1):
+    for i in range(0, len(table_list) - 1):
         two = 0
         ra.append(table_list[one][two])
-        dec.append(table_list[one][two+1])
-        vmag.append(table_list[one][two+2])
-        e_vmag.append(table_list[one][two+3])
-        bmag.append(table_list[one][two+4])
-        e_bmag.append(table_list[one][two+5])
-        gmag.append(table_list[one][two+6])
-        e_gmag.append(table_list[one][two+7])
-        rmag.append(table_list[one][two+8])
-        e_rmag.append(table_list[one][two+9])
+        dec.append(table_list[one][two + 1])
+        vmag.append(table_list[one][two + 2])
+        e_vmag.append(table_list[one][two + 3])
+        bmag.append(table_list[one][two + 4])
+        e_bmag.append(table_list[one][two + 5])
+        gmag.append(table_list[one][two + 6])
+        e_gmag.append(table_list[one][two + 7])
+        rmag.append(table_list[one][two + 8])
+        e_rmag.append(table_list[one][two + 9])
 
         one += 1
 
     # converts degree RA to Hour RA
     ra_new = []
     for i in ra:
-        ra_new.append(i/15)
+        ra_new.append(i / 15)
 
     # converts all list values to numbers and RA/Dec coordinates and magnitudes to numbers with limited decimal places
     ra_final = conversion(ra_new)
