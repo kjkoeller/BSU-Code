@@ -46,10 +46,10 @@ def main(c):
             print("You have entered an invalid number for your number of nights. Please enter a number.")
             print("")
 
-    get_filters(num, filter_name)
+    get_filters(num)
 
 
-def get_filters(n, f):
+def get_filters(n):
     """
     Takes a number of nights for a given filter and takes out the HJD, either A_Mag1 or T1_flux, and
     error for mag or flux
@@ -63,114 +63,59 @@ def get_filters(n, f):
     total_error = []
     total_flux = []
     # checks for either the b, v, r filter as either upper or lowercase will work
-    if f.lower() == "b" or f.lower() == "v":
-        for i in range(n):
-            while True:
-                # makes sure the file pathway is real and points to some file
-                # (does not check if that file is the correct one though)
-                try:
-                    # an example pathway for the files
-                    # E:\Research\Data\NSVS_254037\2018.10.12-reduced\Check\V\2018.10.12.APASS.V_measurements.txt
-                    file = input("Enter night %d file path: " % (i+1))
-                    if path.exists(file):
-                        break
-                    else:
-                        continue
-                except FileNotFoundError:
-                    print("Please enter a correct file path")
-
-            # noinspection PyUnboundLocalVariable
-            df = pd.read_csv(file, delimiter="\t")
-
-            # set parameters to lists from the file by the column header
-            hjd = []
-            amag = []
-            amag_error = []
+    for i in range(n):
+        while True:
+            # makes sure the file pathway is real and points to some file
+            # (does not check if that file is the correct one though)
             try:
-                hjd = list(df["HJD"])
-                amag = list(df["Source_AMag_T1"])
-                amag_error = list(df["Source_AMag_Err_T1"])
-            except KeyError:
-                print("The file you entered does not have the columns of HJD, Source_AMag_T1, or Source_AMag_Err_T1. "
-                      "Please re-enter the file path and make sure its the correct file.")
-                c = 1
-                main(c)
-
-            total_hjd.append(hjd)
-            total_amag.append(amag)
-            total_error.append(amag_error)
-
-        # converts the Dataframe embedded lists into a normal flat list
-        new_hjd = [item for elem in total_hjd for item in elem]
-        new_amag = [item for elem in total_amag for item in elem]
-        new_error = [item for elem in total_error for item in elem]
-
-        # outputs the new file to dataframe and then into a text file for use in Peranso or PHOEBE
-        data = pd.DataFrame({
-            "HJD": new_hjd,
-            "AMag": new_amag,
-            "AMag Error": new_error
-        })
-        print("")
-        output = input("What is the file output name (with file extension .txt): ")
-
-        data.to_csv(output, index=False, header=False, sep='\t')
-        print("")
-        print("Fished saving the file to the same location as this program.")
-
-    # same process as the b or v filter except it checks for the rel flux of T1 instead of the AMag
-    elif f.lower() == "r":
-        for i in range(n):
-            while True:
-                try:
-                    # E:\Research\Data\NSVS_254037\2018.09.18-reduced\Check\R\2018.09.18.APASS.R_measurements.txt
-                    file = input("Enter night " + str(i + 1) + " file path: ")
+                # an example pathway for the files
+                # E:\Research\Data\NSVS_254037\2018.10.12-reduced\Check\V\2018.10.12.APASS.V_measurements.txt
+                file = input("Enter night %d file path: " % (i+1))
+                if path.exists(file):
                     break
-                except FileNotFoundError:
-                    print("Please enter a correct file path")
-            # noinspection PyUnboundLocalVariable
-            df = pd.read_csv(file, delimiter="\t")
+                else:
+                    continue
+            except FileNotFoundError:
+                print("Please enter a correct file path")
 
-            hjd = []
-            flux = []
-            try:
-                hjd = list(df["HJD"])
-                flux = list(df["rel_flux_T1"])
-            except KeyError:
-                print("The file you entered does not have the columns of HJD or rel_flux_T1. "
+        # noinspection PyUnboundLocalVariable
+        df = pd.read_csv(file, delimiter="\t")
+
+        # set parameters to lists from the file by the column header
+        hjd = []
+        amag = []
+        amag_error = []
+        try:
+            hjd = list(df["HJD"])
+            amag = list(df["Source_AMag_T1"])
+            amag_error = list(df["Source_AMag_Err_T1"])
+        except KeyError:
+            print("The file you entered does not have the columns of HJD, Source_AMag_T1, or Source_AMag_Err_T1. "
                       "Please re-enter the file path and make sure its the correct file.")
-                c = 1
-                main(c)
+            c = 1
+            main(c)
 
-            total_hjd.append(hjd)
-            total_flux.append(flux)
+        total_hjd.append(hjd)
+        total_amag.append(amag)
+        total_error.append(amag_error)
 
-        # converts the Dataframe embedded lists into a normal flat list
-        new_hjd = [item for elem in total_hjd for item in elem]
-        new_flux = [item for elem in total_flux for item in elem]
+    # converts the Dataframe embedded lists into a normal flat list
+    new_hjd = [item for elem in total_hjd for item in elem]
+    new_amag = [item for elem in total_amag for item in elem]
+    new_error = [item for elem in total_error for item in elem]
 
-        counter = 0
-        new_error = []
-        while counter != len(new_flux):
-            new_error.append(0.01)
-            counter += 1
+    # outputs the new file to dataframe and then into a text file for use in Peranso or PHOEBE
+    data = pd.DataFrame({
+        "HJD": new_hjd,
+        "AMag": new_amag,
+        "AMag Error": new_error
+    })
+    print("")
+    output = input("What is the file output name (with file extension .txt): ")
 
-        update_flux = []
-        for i in new_flux:
-            u_flux = (-2.5) * (mt.log10(i))
-            update_flux.append(format(u_flux, '.6f'))
-
-        data = pd.DataFrame({
-            "HJD": new_hjd,
-            "Flux": update_flux,
-            "Flux Error": new_error
-        })
-        print("")
-        output = input("What is the file output name (with file extension .txt): ")
-
-        data.to_csv(output, index=False, header=False, sep='\t')
-        print("")
-        print("Fished saving the file to the same location as this program.")
+    data.to_csv(output, index=False, header=False, sep='\t')
+    print("")
+    print("Fished saving the file to the same location as this program.")
 
 
 # Press the green button in the gutter to run the script.
