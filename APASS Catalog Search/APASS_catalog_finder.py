@@ -2,7 +2,8 @@
 Search the APASS catalog by searching a region of the sky for comparison stars and outputs those comparisons to a file.
 
 Author: Kyle Koeller
-Date: February 8, 2021
+Created: 2/8/2021
+Last Updated: 7/5/2022
 Python Version 3.9
 """
 
@@ -30,13 +31,19 @@ def main():
     "width"- set to the notation that is currently set as, but you may change the number being used
     """
     # catalog is II/336/apass9
-    ra_input = float(input("Enter the decimal degree for the RA of your system: "))
-    dec_input = float(input("Enter the decimal degree for the DEC of your system: "))
+    # 00:28:27.9684836736
+    # 78:57:42.657327180
+    ra_input = input("Enter the RA of your system (with the colons): ")
+    dec_input = input("Enter the DEC of your system (with the colons): ")
+
+    ra_input2 = splitter([ra_input])
+    dec_input2 = splitter([dec_input])
+
     result = Vizier(
         columns=['_RAJ2000', '_DEJ2000', 'Vmag', "e_Vmag", 'Bmag', "e_Bmag", "g'mag", "e_g'mag", "r'mag", "e_r'mag"],
         row_limit=-1,
         column_filters=({"Vmag": "<14", "Bmag": "<14"})).query_region(
-        coord.SkyCoord(ra=ra_input, dec=dec_input, unit=(u.h, u.deg), frame="icrs"), width="40m", catalog="APASS")
+        coord.SkyCoord(ra=ra_input2[0], dec=dec_input2[0], unit=(u.h, u.deg), frame="icrs"), width="40m", catalog="APASS")
 
     tb = result['II/336/apass9']
 
@@ -109,6 +116,9 @@ def main():
     text_file = input("Enter a text file name for the output comparisons (ex: APASS_3350218.txt): ")
     df.to_csv(text_file, index=None)
     print("Completed save")
+    print()
+
+    return text_file
 
 
 def conversion(a):
@@ -118,7 +128,6 @@ def conversion(a):
     :param a: decimal RA or DEC
     :return: truncated version using colons
     """
-    print(a)
     b = []
 
     for i in a:
