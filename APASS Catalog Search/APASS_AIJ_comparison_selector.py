@@ -17,7 +17,6 @@ def main():
     # reads the text files to be analyzed for comparison star matches between APASS and Simbad
     # apass_file = input("Enter the text file name for the generated APASS stars: ")
     apass_file = cousins.main()
-    print(apass_file)
     radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
     while True:
         test = 0
@@ -107,7 +106,8 @@ def angle_dist(df, dh):
                                       float(simbad_split_ra[simbad_count]),
                                       float(i))
             if radial <= 0.025:
-                comp = comp.append(df.loc[apass_count:apass_count], ignore_index=True)
+                # comp = comp.append(df.loc[apass_count:apass_count], ignore_index=True)
+                comp = pd.concat([comp, df.loc[apass_count:apass_count]])
             apass_count += 1
         simbad_count += 1
 
