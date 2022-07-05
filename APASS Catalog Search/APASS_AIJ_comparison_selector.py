@@ -7,15 +7,17 @@ Python Version 3.X
 APASS Star comparison finding for the most accurate magnitudes from the list of stars made in AIJ
 """
 
-from __future__ import print_function, division
 import pandas as pd
 from PyAstronomy import pyasl
 import APASS_catalog_finder as APASS_catalog
+import cousins_R as cousins
 
 
 def main():
     # reads the text files to be analyzed for comparison star matches between APASS and Simbad
-    apass_file = input("Enter the text file name for the generated APASS stars: ")
+    # apass_file = input("Enter the text file name for the generated APASS stars: ")
+    apass_file = cousins.main()
+    print(apass_file)
     radec_file = input("Enter the text file name for the RADEC file from AIJ: ")
     while True:
         test = 0
@@ -35,9 +37,29 @@ def main():
     # noinspection PyUnboundLocalVariable
     duplicate_df = angle_dist(df, dh)
 
+    ra = duplicate_df[0]
+    dec = duplicate_df[1]
+    B = duplicate_df[2]
+    e_B = duplicate_df[3]
+    V = duplicate_df[4]
+    e_V = duplicate_df[5]
+    R_c = duplicate_df[6]
+    e_R_c = duplicate_df[7]
+
+    final = pd.DataFrame({
+        "RA": ra,
+        "DEC": dec,
+        "B": B,
+        "e_B": e_B,
+        "V": V,
+        "e_V": e_V,
+        "R_c": R_c,
+        "e_R_c": e_R_c
+    })
+
     # prints the output and saves the dataframe to the text file with "tab" spacing
     output_file = input("Enter an output file name (i.e. 'APASS_254037_Catalog.txt): ")
-    duplicate_df.to_csv(output_file, index=None, sep="\t")
+    final.to_csv(output_file, index=None, sep="\t")
     print("Finished Saving")
 
 
